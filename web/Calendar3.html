@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar Events</title>
+    <style>
+        button{
+            padding-left: 2px;
+            padding-right: 2px;
+            font-size: 10px;
+        }
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            padding: 2px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            text-align: center
+        }
+        h5{
+            color: white;
+            margin: 5px;
+        }
+        ul {
+            margin-right: 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 2px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 10px;
+            background-color: #D6EAF8 ;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .today {
+            background-color: #f0f0f0;
+        }
+        .event-date {
+            background-color: #e6f7ff;
+        }
+        .holiday {
+            background-color: #ffcccb; /* Light red */
+        }
+        .holiday-description {
+            font-size: 12px;
+            color: #666;
+        }
+        .nav-buttons {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h5>Calendar</h5>
+    <div class="nav-buttons">
+        <button onclick="prevMonth()">Previous Month</button>
+        <span id="currentMonthYear"></span>
+        <button onclick="nextMonth()">Next Month</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+    </table>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        var currentYear, currentMonth;
+        var selectedDate;
+
+        function handleClientLoad() {
+            gapi.load('client', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                apiKey: 'AIzaSyDR68MAWJ2S0iaHj_1s-_103k_gmytqPLc',
+                discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
+            }).then(function() {
+                var today = new Date();
+                currentYear = today.getFullYear();
+                currentMonth = today.getMonth();
+                fetchCalendarEvents(currentYear, currentMonth);
+            }, function(error) {
+                console.error(JSON.stringify(error, null, 2));
+            });
+        }
+
+        function fetchCalendarEvents(year, month) {
+            Promise.all([
+                gapi.client.calendar.events.list({
+                    'calendarId': 'en-gb.malaysia#holiday@group.v.calendar.google.com',
+                    'timeMin': new Date(year, month, 1).toISOString(),
+                    'timeMax': new Date(year, month + 1, 0).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'orderBy': 'startTime'
+                }),
+                gapi.client.calendar.events.list({
+                    'calendarId': 'nzickry24@gmail.com',
+                    'timeMin': new Date(year, month, 1).toISOString(),
+                    'timeMax': new Date(year, month + 1, 0).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'orderBy': 'startTime'
+                })
+            ]).then(function(responses) {
+                var events = [];
+                responses.forEach(response => {
+                    events = events.concat(response.result.items);
+                });
+                displayCalendar(events);
+            }).catch(function(error) {
+                console.error('Error fetching events:', error);
+            });
+        }
+
+        function displayCalendar(events) {
+            var calendarBody = document.getElementById('calendar-body');
+            var today = new Date();
+            var year = currentYear || today.getFullYear();
+            var month = currentMonth || today.getMonth();
+
+            var firstDay = new Date(year, month, 1);
+            var lastDay = new Date(year, month + 1, 0);
+            var numDays = lastDay.getDate();
+
+            var startDayOfWeek = firstDay.getDay();
+
+            calendarBody.innerHTML = '';
+
+            var row = document.createElement('tr');
+            for (var i = 0; i < startDayOfWeek; i++) {
+                row.appendChild(document.createElement('td'));
+            }
+            for (var day = 1; day <= numDays; day++) {
+                var cell = document.createElement('td');
+                cell.textContent = day;
+                cell.onclick = () => selectDate(day);
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    cell.classList.add('today');
+                }
+                row.appendChild(cell);
+
+                var holiday = getHoliday(day, month, year, events);
+                if (holiday) {
+                    cell.classList.add('holiday');
+                    cell.setAttribute('title', holiday);
+                }
+
+                if (row.children.length === 7) {
+                    calendarBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+            }
+            if (row.children.length > 0) {
+                calendarBody.appendChild(row);
+            }
+
+            document.getElementById('currentMonthYear').textContent = monthNames[month] + ' ' + year;
+        }
+
+        function getHoliday(day, month, year, events) {
+            var dateString = year + '-' + ('0' + (month + 1)).slice(-2) + '-' + ('0' + day).slice(-2);
+            for (var i = 0; i < events.length; i++) {
+                var eventDate = new Date(events[i].start.date);
+                var eventDateString = eventDate.getFullYear() + '-' + ('0' + (eventDate.getMonth() + 1)).slice(-2) + '-' + ('0' + eventDate.getDate()).slice(-2);
+                if (eventDateString === dateString) {
+                    return events[i].summary;
+                }
+            }
+            return null;
+        }
+
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            fetchCalendarEvents(currentYear, currentMonth);
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            fetchCalendarEvents(currentYear, currentMonth);
+        }
+
+        function selectDate(day) {
+            var year = currentYear || new Date().getFullYear();
+            var month = currentMonth || new Date().getMonth();
+            selectedDate = new Date(year, month, day);
+            alert('Selected date: ' + selectedDate.toDateString());
+        }
+
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        document.addEventListener('DOMContentLoaded', handleClientLoad);
+    </script>
+</body>
+</html>

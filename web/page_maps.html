@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar with Calendar, Events, and Reminders</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1><i class="fa fa-globe"></i> LocaLeisure</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="page_activity.html"><i class="fas fa-bicycle"></i> Activity</a></li>
+                <li><a href="page_weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="page_maps.html"><i class="fas fa-map-marker-alt"></i> Location</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div id="main-content">
+    <!-- Main Content -->
+     <iframe src="maps.html" width="100%" height="1000" style="border:none;"></iframe>
+</div>
+
+<div id="sidebar">
+    <!-- Sidebar Content -->
+    <div class="column">
+        <iframe src="Calendar3.html" width="100%" height="600" style="border:none;"></iframe>
+    </div>
+    <div class="column events">
+        <ul id="events-list">
+            <!-- Events will be populated by FullCalendar -->
+            <!-- Inserted code starts here -->
+            <div id="content">
+                <h6>Nearest 10 Holidays In Malaysia</h6>
+                <ul id="events"></ul>
+            </div>
+            <!-- Inserted code ends here -->
+        </ul>
+    </div>
+    <div class="column reminders">
+        <h6>Reminders</h6>
+            <iframe src="Calendar4.html" width="100%" height="600" style="border:none;"></iframe>
+    </div>
+</div>
+
+<div id="toggle-sidebar">📅</div>
+
+<footer>
+    <ul>
+        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+    </ul>
+    <p>&copy; Group 3</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script>
+    const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    toggleSidebarBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: 'https://www.google.com/calendar/feeds/6a7cfcecd938a6429e1731eca87b759ef1e6dbb5085d76b5a887f1c5c40f1af7@group.calendar.google.com/public/full'
+        });
+    });
+</script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+    const API_KEY = 'AIzaSyDR68MAWJ2S0iaHj_1s-_103k_gmytqPLc';
+    const CALENDAR_ID = 'en-gb.malaysia#holiday@group.v.calendar.google.com';
+    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+    function handleClientLoad() {
+        gapi.load('client', initClient);
+    }
+
+    function initClient() {
+        gapi.client.init({
+            apiKey: API_KEY,
+            discoveryDocs: DISCOVERY_DOCS
+        }).then(function () {
+            listUpcomingEvents();
+        }, function(error) {
+            console.error(JSON.stringify(error, null, 2));
+        });
+    }
+
+    function listUpcomingEvents() {
+        gapi.client.calendar.events.list({
+            'calendarId': CALENDAR_ID,
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 10,
+            'orderBy': 'startTime'
+        }).then(function(response) {
+            let events = response.result.items;
+            let eventsList = document.getElementById('events');
+
+            if (events.length > 0) {
+                eventsList.innerHTML = '';
+                events.forEach(event => {
+                    let li = document.createElement('li');
+                    let when = event.start.dateTime;
+                    if (!when) {
+                        when = event.start.date;
+                    }
+                    li.appendChild(document.createTextNode(`${event.summary} (${when})`));
+                    eventsList.appendChild(li);
+                });
+            } else {
+                eventsList.innerHTML = '<li>No upcoming events found.</li>';
+            }
+            document.getElementById('content').style.display = 'block';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', handleClientLoad);
+</script>
+</body>
+</html>

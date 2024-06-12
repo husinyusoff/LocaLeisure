@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather App</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="weather.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <script src="weather.js" defer></script>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <h1><i class="fa fa-globe"></i> LocaLeisure</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="page_activity.html"><i class="fas fa-bicycle"></i> Activity</a></li>
+                        <li><a href="page_weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                        <li><a href="page_maps.html"><i class="fas fa-map-marker-alt"></i> Location</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div id="main-content">
+            <div class="card">
+                <div class="search">
+                    <input type="text" class="search-bar" placeholder="Search">
+                    <button>
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1.5em" width="1.5em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0 0 11.6 0l43.6-43.5a8.2 8.2 0 0 0 0-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="weather loading">
+                    <h2 class="city">Search Your Weather</h2>
+                    <h1 class="temp">?°C</h1>
+                    <div class="flex">
+                        <img src="https://openweathermap.org/img/wn/04n.png" alt="" class="icon" />
+                        <div class="description">Cloudy</div>
+                    </div>
+                    <div class="humidity">Humidity: ??%</div>
+                    <div class="wind">Wind speed: ?? km/h</div>
+                </div>
+                <div class="forecast">
+                    <div class="forecast-day">
+                        <img src="https://openweathermap.org/img/wn/01d.png" alt="Clear" class="forecast-icon">
+                        <div class="forecast-info">
+                            <div class="day">Monday</div>
+                            <div class="date">June 12</div>
+                        </div>
+                        <div class="description">Clear Sky</div>
+                        <div class="temp">30°C</div>
+                    </div>
+                    <!-- Repeat the above structure for each forecast day -->
+                </div>
+            </div>
+        </div>
+        <div id="sidebar">
+            <!-- Sidebar Content -->
+            <div class="column">
+                <iframe src="Calendar3.html" width="100%" height="600" style="border:none;"></iframe>
+            </div>
+            <div class="column events">
+                <ul id="events-list">
+                    <!-- Events will be populated by FullCalendar -->
+                    <!-- Inserted code starts here -->
+                    <div id="content">
+                <h6>Nearest 10 Holidays In Malaysia</h6>
+                        <ul id="events"></ul>
+                    </div>
+                    <!-- Inserted code ends here -->
+                </ul>
+            </div>
+            <div class="column reminders">
+                <h6>Reminders</h6>
+                <iframe src="Calendar4.html" width="100%" height="600" style="border:none;"></iframe>
+            </div>
+        </div>
+
+        <div id="toggle-sidebar">📅</div>
+
+        <footer>
+            <ul>
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <p>&copy; Group 3</p>
+        </footer>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script>
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+
+            toggleSidebarBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+
+            $(document).ready(function () {
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    events: 'https://www.google.com/calendar/feeds/6a7cfcecd938a6429e1731eca87b759ef1e6dbb5085d76b5a887f1c5c40f1af7@group.calendar.google.com/public/full'
+                });
+            });
+        </script>
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script>
+                const API_KEY = 'AIzaSyDR68MAWJ2S0iaHj_1s-_103k_gmytqPLc';
+                const CALENDAR_ID = 'en-gb.malaysia#holiday@group.v.calendar.google.com';
+                const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+                function handleClientLoad() {
+                    gapi.load('client', initClient);
+                }
+
+                function initClient() {
+                    gapi.client.init({
+                        apiKey: API_KEY,
+                        discoveryDocs: DISCOVERY_DOCS
+                    }).then(function () {
+                        listUpcomingEvents();
+                    }, function (error) {
+                        console.error(JSON.stringify(error, null, 2));
+                    });
+                }
+
+                function listUpcomingEvents() {
+                    gapi.client.calendar.events.list({
+                        'calendarId': CALENDAR_ID,
+                        'timeMin': (new Date()).toISOString(),
+                        'showDeleted': false,
+                        'singleEvents': true,
+                        'maxResults': 10,
+                        'orderBy': 'startTime'
+                    }).then(function (response) {
+                        let events = response.result.items;
+                        let eventsList = document.getElementById('events');
+
+                        if (events.length > 0) {
+                            eventsList.innerHTML = '';
+                            events.forEach(event => {
+                                let li = document.createElement('li');
+                                let when = event.start.dateTime;
+                                if (!when) {
+                                    when = event.start.date;
+                                }
+                                li.appendChild(document.createTextNode(`${event.summary} (${when})`));
+                                eventsList.appendChild(li);
+                            });
+                        } else {
+                            eventsList.innerHTML = '<li>No upcoming events found.</li>';
+                        }
+                        document.getElementById('content').style.display = 'block';
+                    });
+                }
+
+                document.addEventListener('DOMContentLoaded', handleClientLoad);
+        </script>
+    </body>
+</html>

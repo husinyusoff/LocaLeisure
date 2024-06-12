@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar API Key Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Holidays In Malaysia</h1>
+        <ul id="events"></ul>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        const API_KEY = 'AIzaSyDR68MAWJ2S0iaHj_1s-_103k_gmytqPLc';
+        const CALENDAR_ID = 'en-gb.malaysia#holiday@group.v.calendar.google.com';
+        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+        function handleClientLoad() {
+            gapi.load('client', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: DISCOVERY_DOCS
+            }).then(function () {
+                listUpcomingEvents();
+            }, function(error) {
+                console.error(JSON.stringify(error, null, 2));
+            });
+        }
+
+        function listUpcomingEvents() {
+            gapi.client.calendar.events.list({
+                'calendarId': CALENDAR_ID,
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime'
+            }).then(function(response) {
+                let events = response.result.items;
+                let eventsList = document.getElementById('events');
+
+                if (events.length > 0) {
+                    eventsList.innerHTML = '';
+                    events.forEach(event => {
+                        let li = document.createElement('li');
+                        let when = event.start.dateTime;
+                        if (!when) {
+                            when = event.start.date;
+                        }
+                        li.appendChild(document.createTextNode(`${event.summary} (${when})`));
+                        eventsList.appendChild(li);
+                    });
+                } else {
+                    eventsList.innerHTML = '<li>No upcoming events found.</li>';
+                }
+                document.getElementById('content').style.display = 'block';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', handleClientLoad);
+    </script>
+</body>
+</html>

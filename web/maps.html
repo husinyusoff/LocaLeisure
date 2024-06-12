@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tourism Place Locator</title>
+        <link rel="stylesheet" href="maps.css">
+    </head>
+    <body>
+        <main>
+            <div class="left-section">
+                <section class="activity-section">
+                    <h2>Category</h2>
+                    <label for="activity"><i class="fa fa-location-arrow" aria-hidden="true"></i></label>
+                    <select id="activitySelect" onchange="displayActivity()">
+                        <option value="">Select a category</option>
+                        <option value="hiking">Hiking</option>
+                        <option value="beach">Islands</option>
+                        <option value="museum">Museum</option>
+                    </select>
+                </section>
+                <section class="location-section">
+                    <h2>Location</h2>
+                    <p id="locationMessage"></p>
+                    <div id="locationList"></div>
+                </section>
+            </div>
+            <div class="right-section">
+                <section class="map-section">
+                    <h2>Map</h2>
+                    <div id="map"></div>
+                </section>
+            </div>
+        </main>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-bK64mtISOU6fx6a0eZvXG4nP-sSU5w0&libraries=places"></script>
+        <script src="maps.js"></script>
+    </body>
+</html>

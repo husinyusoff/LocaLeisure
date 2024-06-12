@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+header {
+    background-color: #bbbbbb;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+header img {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: 100px;
+    padding: 10px;
+}
+
+nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+nav button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+nav button.active {
+    background-color: #aaa;
+}
+
+nav button:hover {
+    background-color: #aaa;
+    color: white;
+}
+
+main {
+    display: flex;
+    background-color: #89927b;
+    padding: 0px;
+    height: 530px;
+    box-sizing: border-box;
+}
+
+.left-section, .right-section {
+    flex: 1;
+    padding: 0px 20px 0px 20px;
+    box-sizing: border-box;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.activity-section, .location-section {
+    background-color: #89927b;
+    color: white;
+}
+
+.map-section {
+    background-color: #89927b;
+    color: white;
+}
+
+#activitySelect {
+    width: 100%;
+    padding: 10px;
+}
+
+#locationList {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.location-item {
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px 0;
+    background-color: #ddd;
+    color: #000;
+    border-radius: 4px;
+}
+
+.location-item:hover {
+    background-color: #bbb;
+}
+
+#map {
+    width: 100%;
+    height: 420px;
+    background-color: #eaeaea;
+    box-sizing: border-box;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #bbbbbb;
+}

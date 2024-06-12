@@ -1,0 +1,170 @@
+iframe {
+    width: 100%;
+    height: 250px;
+}
+#main-content iframe {
+            width: 100%;
+            height: 550px;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+}
+#column reminders iframe {
+        width: 100%;
+        height: 150px;
+}
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* Adjust the max-width as needed */
+    height: 400px; /* Adjust the height as needed */
+    overflow: hidden;
+    margin: auto;
+}
+
+.carousel-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.carousel-image.active {
+    opacity: 1;
+}
+
+body {
+    font-family: 'Comic Sans MS', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #2471A3;
+    color: white;
+    padding: 5px 0;
+    text-align: center;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin-right: auto;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin-right: 20px;
+}
+
+header nav ul li:last-child {
+    margin-right: 0;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+#main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #FEF5E7;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+#sidebar {
+    font-family: 'Comic Sans MS', sans-serif;
+    width: 300px;
+    height: 100vh;
+    background-color: #1B4F72;
+    color: white;
+    position: fixed;
+    right: -300px;
+    top: 0;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    font-size: 10px
+}
+
+#sidebar.open {
+    right: 0;
+}
+
+#toggle-sidebar {
+    position: fixed;
+    right: 0;
+    top: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #FEF5E7;
+    color: white;
+    border-radius: 10px;
+}
+
+.column {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.events {
+    height: 70vh; /* Adjust the height as needed */
+}
+
+.reminders ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.reminders ul li {
+    display: flex;
+    align-items: center;
+}
+
+.reminders ul li input {
+    margin-right: 10px;
+}
+
+footer {
+    background-color: #2471A3;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+}
+
+footer ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+footer ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+footer ul li:last-child {
+    margin-right: 0;
+}
+
+footer ul li a {
+    color: white;
+    text-decoration: none;
+}
